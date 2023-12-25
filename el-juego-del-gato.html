@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego del Gato</title>
+    <style>
+        td {
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<table id="tablero">
+    <tr>
+        <td onclick="hacerMovimiento(0, 0)"></td>
+        <td onclick="hacerMovimiento(0, 1)"></td>
+        <td onclick="hacerMovimiento(0, 2)"></td>
+    </tr>
+    <tr>
+        <td onclick="hacerMovimiento(1, 0)"></td>
+        <td onclick="hacerMovimiento(1, 1)"></td>
+        <td onclick="hacerMovimiento(1, 2)"></td>
+    </tr>
+    <tr>
+        <td onclick="hacerMovimiento(2, 0)"></td>
+        <td onclick="hacerMovimiento(2, 1)"></td>
+        <td onclick="hacerMovimiento(2, 2)"></td>
+    </tr>
+</table>
+
+<script>
+    let jugadorActual = 'X';
+    let juegoTerminado = false;
+
+    function hacerMovimiento(fila, columna) {
+        if (!juegoTerminado) {
+            const celda = document.getElementById(`celda-${fila}-${columna}`);
+
+            if (celda.innerHTML === '') {
+                celda.innerHTML = jugadorActual;
+
+                if (verificarGanador()) {
+                    alert(`¡Jugador ${jugadorActual} gana!`);
+                    juegoTerminado = true;
+                } else if (tableroCompleto()) {
+                    alert('¡El juego terminó en empate!');
+                    juegoTerminado = true;
+                } else {
+                    jugadorActual = (jugadorActual === 'X') ? 'O' : 'X';
+                }
+            } else {
+                alert('¡Esa casilla ya está ocupada! Intenta de nuevo.');
+            }
+        }
+    }
+
+    function verificarGanador() {
+        const tablero = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8]
+        ];
+
+        for (const combinacion of tablero) {
+            const [a, b, c] = combinacion;
+            const celdaA = document.getElementById(`celda-${Math.floor(a / 3)}-${a % 3}`).innerHTML;
+            const celdaB = document.getElementById(`celda-${Math.floor(b / 3)}-${b % 3}`).innerHTML;
+            const celdaC = document.getElementById(`celda-${Math.floor(c / 3)}-${c % 3}`).innerHTML;
+
+            if (celdaA !== '' && celdaA === celdaB && celdaB === celdaC) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    function tableroCompleto() {
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                const celda = document.getElementById(`celda-${i}-${j}`);
+                if (celda.innerHTML === '') {
+                    return false;
+                }
+            }
+        }
+        return true;
+        
